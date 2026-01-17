@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
-task=$(echo "" | wofi --dmenu --prompt "Task (*label +project due !pri)")
-[ -z "$task" ] && exit 0
+JOPLIN="/home/f0ld/.npm-global/bin/joplin"
 
-if cria --quick "$task" 2>/dev/null; then
-    notify-send "Task added" "$task" 2>/dev/null || true
-else
-    notify-send "Failed" "Could not add task" 2>/dev/null || true
-fi
+title=$(echo "" | wofi --dmenu --prompt "Todo name")
+[ -z "$title" ] && exit 0
+
+$JOPLIN mktodo "$title" || exit 1
+
+extra=$(echo "" | wofi --dmenu --prompt "Extra?")
+[ -n "$extra" ] && $JOPLIN set "$title" body "$extra"
+
+notify-send "Todo added" "$title"
