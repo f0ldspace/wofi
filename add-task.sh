@@ -9,5 +9,5 @@ extra=$(echo "" | wofi --dmenu --prompt "Extra?")
 
 $JOPLIN mktodo "$title" || exit 1
 [ -n "$extra" ] && $JOPLIN set "$title" body "$extra"
-
+$JOPLIN sync
 notify-send "Todo added" "$title"

@@ -10,3 +10,4 @@ selected=$(echo "$entries" | wofi --dmenu --prompt "Joplin" --matching fuzzy)
 note_id=$(echo "$selected" | cut -d'|' -f1 | xargs)
 
 EDITOR=trinity alacritty -e $JOPLIN edit "$note_id"
+$JOPLIN sync

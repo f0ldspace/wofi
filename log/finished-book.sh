@@ -36,5 +36,7 @@ type=$(printf '%s\n' Non-Fiction Fiction | wofi --dmenu --prompt "Type")
 format=$(printf '%s\n' Audiobook Digital Physical | wofi --dmenu --prompt "Format")
 [ -z "$format" ] && exit 0
 
-echo "$date,\"$title\",$rating,$category,$subcategory,$type,$format" >>"$BOOK_LOG"
+review=$(echo "" | wofi --dmenu --prompt "Review")
+
+echo "$date,\"$title\",$rating,$category,$subcategory,$type,$format,\"$review\"" >>"$BOOK_LOG"
 notify-send "Book logged" "$title" 2>/dev/null || true
