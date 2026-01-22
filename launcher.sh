@@ -17,7 +17,7 @@ list_entries() {
     echo "$dirname/"
   done
 
-  echo "================================================"
+  echo "===================="
 
   for dir in "$SCRIPTS_DIR"/*/; do
     [ -d "$dir" ] || continue

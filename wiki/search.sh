@@ -12,19 +12,40 @@ generate_entries() {
             /^[^#]/ && NF { gsub(/^[ \t]+|[ \t]+$/, ""); print; exit }
             /^#/ { gsub(/^#+[ \t]*/, ""); print; exit }
         ' "$file")
-    # trim preview if too long
     preview="${preview:0:60}"
     printf "%s | %s\n" "$filename" "$preview"
   done
 }
 
-selected=$(generate_entries | wofi --dmenu --prompt "Wiki" --matching fuzzy)
+entries=$(generate_entries)
+selected=$(echo "$entries" | wofi --dmenu --prompt "Wiki" --matching fuzzy)
 
 [ -z "$selected" ] && exit 0
 
 filename=$(echo "$selected" | cut -d'|' -f1 | xargs)
 
-# NOTE: change for other editors
+# If selection matches an existing file, open it
+if [ -f "$WIKI_DIR/$filename.md" ]; then
+  alacritty -e trinity "$WIKI_DIR/$filename.md"
+  exit 0
+fi
+
+# Otherwise treat input as a deep search query
+query="$selected"
+results=$(grep -rli "$query" "$WIKI_DIR"/*.md 2>/dev/null | while read -r file; do
+  fname=$(basename "$file" .md)
+  match=$(grep -i -m1 "$query" "$file" | head -c 60)
+  printf "%s | %s\n" "$fname" "$match"
+done)
+
+[ -z "$results" ] && exit 0
+
+selected=$(echo "$results" | wofi --dmenu --prompt "Results" --matching fuzzy)
+
+[ -z "$selected" ] && exit 0
+
+filename=$(echo "$selected" | cut -d'|' -f1 | xargs)
+
 if [ -f "$WIKI_DIR/$filename.md" ]; then
   alacritty -e trinity "$WIKI_DIR/$filename.md"
 fi
