@@ -20,10 +20,10 @@ decks=$(curl -s "$ANKI_API" -X POST \
 deck=$(echo "$decks" | wofi --dmenu --prompt "Deck" --matching fuzzy)
 [ -z "$deck" ] && exit 0
 
-front=$(echo "$clipboard" | wofi --dmenu --prompt "Front (from clipboard)")
+front=$(echo "" | wofi --dmenu --prompt "Front")
 [ -z "$front" ] && exit 0
 
-back=$(echo "" | wofi --dmenu --prompt "Back")
+back=$(echo "$clipboard" | wofi --dmenu --prompt "Back (from clipboard)")
 [ -z "$back" ] && exit 0
 
 front_escaped=$(printf '%s' "$front" | jq -Rs .)
