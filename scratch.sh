@@ -1,10 +1,26 @@
 #!/usr/bin/env bash
 
-SCRATCH_FILE="$HOME/wiki/scratch.md"
+JOPLIN="/home/f0ld/.npm-global/bin/joplin"
+TOKEN="9c682d3ff36c405466d6f6c6c9e013c40081178a5e059334a31e64545d43dc390cd9e205fd779c59adc4df3cef88e0c34b8b983875cccc517f014c012e2b8361"
+API="http://localhost:41184"
 
-note=$(echo "" | wofi --dmenu --prompt "Note")
-[ -z "$note" ] && exit 0
+text=$(echo "" | wofi --dmenu --prompt "Append to scratch")
+[ -z "$text" ] && exit 0
 
-mkdir -p "$(dirname "$SCRATCH_FILE")"
-echo "- $note" >>"$SCRATCH_FILE"
-notify-send "Note added" "Saved to scratch.md" 2>/dev/null || true
+note_id=$(curl -s "$API/search?query=scratch%20notebook:scratch&type=note&fields=id&token=$TOKEN" | jq -r '.items[0].id')
+
+if [ -z "$note_id" ] || [ "$note_id" = "null" ]; then
+  notify-send "Joplin" "Could not find scratch note"
+  exit 1
+fi
+
+body=$(curl -s "$API/notes/$note_id?fields=body&token=$TOKEN" | jq -r '.body')
+new_body="${body}
+${text}"
+
+curl -s -X PUT "$API/notes/$note_id?token=$TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{\"body\": $(echo "$new_body" | jq -Rs .)}"
+
+notify-send "Joplin" "Appended to scratch"
+$JOPLIN sync &

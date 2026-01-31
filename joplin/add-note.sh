@@ -13,7 +13,7 @@ extra=$(echo "" | wofi --dmenu --prompt "Extra?")
 
 curl -s -X POST "$API/notes?token=$TOKEN" \
   -H "Content-Type: application/json" \
-  -d "{\"title\": \"$title\", \"body\": \"$extra\", \"is_todo\": 1, \"parent_id\": \"$FOLDER_ID\"}"
+  -d "{\"title\": \"$title\", \"body\": \"$extra\", \"is_todo\": 0, \"parent_id\": \"$FOLDER_ID\"}"
 
 notify-send "Todo added" "$title"
 $JOPLIN sync &
