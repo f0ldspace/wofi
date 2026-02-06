@@ -16,11 +16,12 @@ fi
 
 body=$(curl -s "$API/notes/$note_id?fields=body&token=$TOKEN" | jq -r '.body')
 new_body="${body}
-${text}"
+- ${text}"
 
 curl -s -X PUT "$API/notes/$note_id?token=$TOKEN" \
   -H "Content-Type: application/json" \
   -d "{\"body\": $(echo "$new_body" | jq -Rs .)}"
 
 notify-send "Joplin" "Appended to scratch"
-$JOPLIN sync &
+$JOPLIN sync
+notify-send "Joplin" "Synced changes to remote"

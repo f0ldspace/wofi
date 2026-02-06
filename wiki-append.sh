@@ -4,7 +4,7 @@ WIKI_DIR="$HOME/wiki"
 
 # Get titles from first heading or filename
 entries=""
-for f in "$WIKI_DIR"/*.md; do
+for f in "$WIKI_DIR"/*.org; do
   [ -f "$f" ] || continue
   filename=$(basename "$f")
   title=$(grep -m1 '^# ' "$f" | sed 's/^# //')
@@ -28,7 +28,7 @@ fi
 text=$(echo "" | wofi --dmenu --prompt "Append text")
 [ -z "$text" ] && exit 0
 
-echo "" >> "$filepath"
-echo "$text" >> "$filepath"
+echo "" >>"$filepath"
+echo "* $text" >>"$filepath"
 
 notify-send "Wiki" "Appended to $selected"

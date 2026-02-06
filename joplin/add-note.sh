@@ -16,4 +16,5 @@ curl -s -X POST "$API/notes?token=$TOKEN" \
   -d "{\"title\": \"$title\", \"body\": \"$extra\", \"is_todo\": 0, \"parent_id\": \"$FOLDER_ID\"}"
 
 notify-send "Todo added" "$title"
-$JOPLIN sync &
+$JOPLIN sync
+notify-send "Joplin" "Changes synced to remote"

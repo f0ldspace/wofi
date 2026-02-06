@@ -16,4 +16,5 @@ note_id=$(echo "$entries" | grep -F $'\t'"$selected" | head -1 | cut -f1)
 
 curl -s -X DELETE "$API/notes/$note_id?token=$TOKEN"
 
-$JOPLIN sync &
+$JOPLIN sync
+notify-send "Joplin" "Changes synced to remote"

@@ -11,9 +11,9 @@ fi
 response=$(curl -s "$ANKI_API" -X POST \
   -d '{"action": "sync", "version": 6}')
 
-#if echo "$response" | jq -e '.error == null' >/dev/null 2>&1; then
-#  notify-send "Anki" "Sync complete"
-#else
-#  error=$(echo "$response" | jq -r '.error // "Unknown error"')
-#  notify-send "Anki" "Sync failed: $error"
-#fi
+if echo "$response" | jq -e '.error == null' >/dev/null 2>&1; then
+  notify-send "Anki" "Sync complete"
+else
+  error=$(echo "$response" | jq -r '.error // "Unknown error"')
+  notify-send "Anki" "Sync failed: $error"
+fi
