@@ -42,5 +42,5 @@ Personal collection of wofi scripts for quick actions. Run `launcher.sh` to brow
 - curl
 - notify-send
 - For anki scripts: Anki with AnkiConnect addon
-- For joplin scripts: Joplin CLI
+- For joplin scripts: Joplin CLI + API token in `joplin-token`
 - For fatebook: API key in `~/.config/fatebook/api_key`

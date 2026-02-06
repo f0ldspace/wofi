@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 JOPLIN="/home/f0ld/.npm-global/bin/joplin"
-TOKEN="9c682d3ff36c405466d6f6c6c9e013c40081178a5e059334a31e64545d43dc390cd9e205fd779c59adc4df3cef88e0c34b8b983875cccc517f014c012e2b8361"
+TOKEN=$(cat ~/wofi/joplin-token)
 API="http://localhost:41184"
 
 FOLDER_ID=$(curl -s "$API/search?query=scratch&type=folder&fields=id&token=$TOKEN" | jq -r '.items[0].id')
