@@ -1,27 +1,12 @@
 #!/usr/bin/env bash
 
-JOPLIN="/home/f0ld/.npm-global/bin/joplin"
-TOKEN=$(cat ~/wofi/joplin-token)
-API="http://localhost:41184"
+DAILY="$HOME/wiki/daily/$(date +%Y-%m-%d).md"
 
-text=$(echo "" | wofi --dmenu --prompt "Append to scratch")
+text=$(echo "" | wofi --dmenu --prompt "Scratch")
 [ -z "$text" ] && exit 0
 
-note_id=$(curl -s "$API/search?query=scratch%20notebook:scratch&type=note&fields=id&token=$TOKEN" | jq -r '.items[0].id')
+timestamp=$(date +%H:%M)
 
-if [ -z "$note_id" ] || [ "$note_id" = "null" ]; then
-  notify-send "Joplin" "Could not find scratch note"
-  exit 1
-fi
+echo "- **${timestamp}** // ${text}" >>"$DAILY"
 
-body=$(curl -s "$API/notes/$note_id?fields=body&token=$TOKEN" | jq -r '.body')
-new_body="${body}
-- ${text}"
-
-curl -s -X PUT "$API/notes/$note_id?token=$TOKEN" \
-  -H "Content-Type: application/json" \
-  -d "{\"body\": $(echo "$new_body" | jq -Rs .)}"
-
-notify-send "Joplin" "Appended to scratch"
-$JOPLIN sync
-notify-send "Joplin" "Synced changes to remote"
+notify-send "Scratched" "$text"

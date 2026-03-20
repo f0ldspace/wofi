@@ -34,8 +34,8 @@ urlencode() {
   for ((pos = 0; pos < strlen; pos++)); do
     c=${string:$pos:1}
     case "$c" in
-      [-_.~a-zA-Z0-9]) o="$c" ;;
-      *) printf -v o '%%%02X' "'$c" ;;
+    [-_.~a-zA-Z0-9]) o="$c" ;;
+    *) printf -v o '%%%02X' "'$c" ;;
     esac
     encoded+="$o"
   done
@@ -47,6 +47,7 @@ url="https://fatebook.io/api/v0/createQuestion?apiKey=${API_KEY}&title=${encoded
 
 response=$(curl -s -X POST "$url")
 
+# BUG: Says it failed regardless
 if echo "$response" | grep -q '"url"'; then
   notify-send "Prediction added" "$title @ ${probability}%"
 else

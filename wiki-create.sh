@@ -7,12 +7,10 @@ title=$(echo "" | wofi --dmenu --prompt "Note title")
 
 date=$(date +%Y-%m-%d)
 
-# Sanitize filename (remove special chars, replace spaces with dashes)
 slug=$(echo "$title" | tr ' ' '-' | tr -cd '[:alnum:]-_')
 filename="${date}-${slug}"
 filepath="$WIKI_DIR/$filename.md"
 
-# Don't overwrite existing files
 if [ -f "$filepath" ]; then
   notify-send "Note exists" "$filename.md already exists" 2>/dev/null
   alacritty -e trinity "$filepath" &

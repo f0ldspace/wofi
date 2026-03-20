@@ -2,15 +2,14 @@
 
 WIKI_DIR="$HOME/wiki"
 
-# Get titles from first heading or filename
 entries=""
-for f in "$WIKI_DIR"/*.org; do
+while IFS= read -r -d '' f; do
   [ -f "$f" ] || continue
-  filename=$(basename "$f")
+  relpath="${f#$WIKI_DIR/}"
   title=$(grep -m1 '^# ' "$f" | sed 's/^# //')
-  [ -z "$title" ] && title="$filename"
-  entries+="$filename	$title"$'\n'
-done
+  [ -z "$title" ] && title="$relpath"
+  entries+="$relpath	$title"$'\n'
+done < <(find "$WIKI_DIR" -type f -name '*.md' -print0 | sort -z)
 
 titles=$(echo -n "$entries" | cut -f2)
 
@@ -29,6 +28,6 @@ text=$(echo "" | wofi --dmenu --prompt "Append text")
 [ -z "$text" ] && exit 0
 
 echo "" >>"$filepath"
-echo "* $text" >>"$filepath"
+echo "## $text" >>"$filepath"
 
 notify-send "Wiki" "Appended to $selected"
